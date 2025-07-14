@@ -1,29 +1,26 @@
-import streamlit as st
-import speech_recognition as sr
-import os
-from pydub import AudioSegment  # For converting m4a to wav
+from pydub import AudioSegment
 from io import BytesIO
+import speech_recognition as sr
+import streamlit as st
 
-st.title("🎙️Speech to Text (Supports .wav and .m4a)")
+st.title("Speech-to-Text: Multi-Format Audio Support (.mp3, .m4a, .ogg, .wav, etc.)")
 
-uploaded_file = st.file_uploader("Upload an audio file (.wav or .m4a)", type=["wav", "m4a"])
+uploaded_file = st.file_uploader("Upload your audio file", type=["wav", "mp3", "m4a", "flac", "ogg", "aac"])
 
 if uploaded_file:
-    file_details = {"filename": uploaded_file.name, "filetype": uploaded_file.type}
-    st.write(file_details)
-
-    # Convert .m4a to .wav if needed
-    if uploaded_file.name.endswith(".m4a"):
-        audio = AudioSegment.from_file(uploaded_file, format="m4a")
-        buffer = BytesIO()
-        audio.export(buffer, format="wav")
-        buffer.seek(0)
-        audio_file = sr.AudioFile(buffer)
-    else:
-        audio_file = sr.AudioFile(uploaded_file)
+    st.write(f"File Uploaded: {uploaded_file.name}")
+    
+    # Extract format from extension
+    file_extension = uploaded_file.name.split(".")[-1].lower()
+    
+    # Convert all to WAV
+    audio = AudioSegment.from_file(uploaded_file, format=file_extension)
+    buffer = BytesIO()
+    audio.export(buffer, format="wav")
+    buffer.seek(0)
 
     recognizer = sr.Recognizer()
-    with audio_file as source:
+    with sr.AudioFile(buffer) as source:
         audio_data = recognizer.record(source)
         try:
             text = recognizer.recognize_google(audio_data)
