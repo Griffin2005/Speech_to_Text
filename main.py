@@ -4,7 +4,7 @@ import os
 from pydub import AudioSegment  # For converting m4a to wav
 from io import BytesIO
 
-st.title("Speech to Text (Supports .wav and .m4a)")
+st.title("🎙️Speech to Text (Supports .wav and .m4a)")
 
 uploaded_file = st.file_uploader("Upload an audio file (.wav or .m4a)", type=["wav", "m4a"])
 
