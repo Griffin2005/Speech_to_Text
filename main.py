@@ -3,7 +3,7 @@ from io import BytesIO
 import speech_recognition as sr
 import streamlit as st
 
-st.title("Speech-to-Text: Multi-Format Audio Support (.mp3, .m4a, .ogg, .wav, etc.)")
+st.title("🎙️ Speech-to-Text: Multi-Format Audio Support (.mp3, .m4a, .ogg, .wav, etc.)")
 
 uploaded_file = st.file_uploader("Upload your audio file", type=["wav", "mp3", "m4a", "flac", "ogg", "aac"])
 
