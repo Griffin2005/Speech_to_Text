@@ -3,12 +3,12 @@ import speech_recognition as sr
 from pydub import AudioSegment
 import tempfile
 import os
-from io import BytesIO
 
-st.title("Speech-to-Text with Any Audio Format")
+st.set_page_config(page_title="Speech-to-Text App", layout="centered")
+st.title("🎙️ Speech-to-Text App (Upload any audio file)")
 
 uploaded_file = st.file_uploader(
-    "Upload your audio file (mp3, wav, m4a, flac, ogg, aac)", 
+    "Upload an audio file (wav, mp3, m4a, flac, ogg, aac)", 
     type=["wav", "mp3", "m4a", "flac", "ogg", "aac"]
 )
 
@@ -26,19 +26,23 @@ if uploaded_file:
     wav_temp = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
     audio.export(wav_temp.name, format="wav")
 
-    # Speech Recognition on WAV file
+    # Speech Recognition
     recognizer = sr.Recognizer()
     with sr.AudioFile(wav_temp.name) as source:
         audio_data = recognizer.record(source)
         try:
             text = recognizer.recognize_google(audio_data)
-            st.success("Recognized Text:")
-            st.write(text)
+            st.success("✅ Recognized Text:")
+            st.text_area("Transcript:", value=text, height=200)
         except sr.UnknownValueError:
-            st.error("Could not understand the audio.")
+            st.error("❌ Could not understand the audio.")
         except sr.RequestError as e:
-            st.error(f"API Error: {e}")
+            st.error(f"❌ API Error: {e}")
 
     # Clean up temp files
     os.unlink(temp_audio_path)
     os.unlink(wav_temp.name)
+
+# Clear history button (optional)
+if st.button("Clear Transcript"):
+    st.experimental_rerun()
