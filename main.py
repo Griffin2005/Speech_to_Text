@@ -44,5 +44,8 @@ if uploaded_file:
     os.unlink(wav_temp.name)
 
 # Clear history button (optional)
-if st.button("Clear Transcript"):
-    st.experimental_rerun()
+clear = st.button("Clear Transcript")
+if clear:
+    st.session_state.clear()
+    st.rerun()
+
